@@ -19,6 +19,7 @@ if ! [ -a $gcc32bin ]; then git clone --depth=1 https://github.com/LineageOS/and
 fi
 rm -rf AnyKernel
 make O=out ARCH=arm64 vendor/xiaomi/miatoll_defconfig
+make -j$(nproc --all) O=out ARCH=arm64 INSTALL_HDR_PATH=usr headers_install
 PATH="${PWD}/clang/bin:${PATH}:${PWD}/gcc32/bin:${PATH}:${PWD}/gcc64/bin:${PATH}" \
 make -j$(nproc --all) O=out \
                       ARCH=arm64 \
@@ -27,7 +28,10 @@ make -j$(nproc --all) O=out \
                       CROSS_COMPILE="${PWD}/gcc64/bin/aarch64-linux-android-" \
                       CROSS_COMPILE_ARM32="${PWD}/gcc32/bin/arm-linux-androideabi-" \
                       LD=ld.lld \
-                      CONFIG_NO_ERROR_ON_MISMATCH=y
+                      CONFIG_NO_ERROR_ON_MISMATCH=y \
+                      KSU_VERSION_OVERRIDE=33318 \
+                      KSU_MANAGER_PACKAGE=com.rifsxd.ksunext \
+                      KSU_VERSION_TAG_OVERRIDE=v3.4.0-legacy
 }
 function zupload()
 {
